@@ -1,2 +1,2 @@
-# skilfactory
-skil
+# skillfactory
+skill
