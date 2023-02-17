@@ -1,0 +1,55 @@
+from news.forms import PostForm
+from news.models import *
+f = PostForm({'author': 1, 'choice_field': article, 'category': [1], 'header': 'header 2', 'article_text': "article 2",'rating': 0})
+f.is_valid()
+f.errors
+f.cleaned_data
+print(f)
+
+from news.models import *
+User.objects.create_user('user1')
+User.objects.create_user('user2')
+user1 = User.objects.get(pk=1)
+Author.objects.create(user=user1, rating=0)
+user2 = User.objects.get(pk=2)
+Author.objects.create(user=user2, rating=0)
+author1 = Author.objects.get(pk=1)
+author2 = Author.objects.get(pk=2)
+cat1 = Category.objects.create(name='Тема1')
+cat2 = Category.objects.create(name='Тема2')
+cat3 = Category.objects.create(name='Тема3')
+cat4 = Category.objects.create(name='Тема4')
+post1 = Post.objects.create(author=author1, choice_field=article, header='header1',article_text='Article1', rating=0)
+post2 = Post.objects.create(author=author2, choice_field=article, header='header2',article_text='Article2', rating=0)
+post3 = Post.objects.create(author=author1, choice_field=news, header='header3',article_text='News1', rating=0)
+com1 = Comment.objects.create(post=post1, user=user1, comment_text='comment_text1', rating=0)
+com2 = Comment.objects.create(post=post1, user=user2, comment_text='comment_text2', rating=0)
+com3 = Comment.objects.create(post=post2, user=user1, comment_text='comment_text3', rating=0)
+com4 = Comment.objects.create(post=post3, user=user1, comment_text='comment_text4', rating=0)
+Comment.like(com1)
+Comment.like(com2)
+Comment.like(com3)
+Comment.like(com4)
+Post.like(post1)
+Post.like(post2)
+Post.like(post3)
+Post.like(post3)
+Post.dislike(post3)
+Author.update_rating(author1)
+Author.update_rating(author2)
+Author.objects.all().order_by('-rating').values('user__username', 'rating')[0]
+qs=Post.objects.all().order_by('-rating')
+Post.preview(qs.first())
+qs.values('time_in', 'author__user__username', 'rating', 'header').first()
+c=Comment.objects.filter(post=qs.first()).values('time_in', 'user__username', 'rating', 'comment_text')
+print(len(c))
+c[0]
+c[1]
+
+post1 = Post.objects.get(pk=1)
+cat1=Category.objects.get(pk=1)
+post1.category.add(cat1)
+Post.objects.get(pk=2).category.add(Category.objects.get(pk=2))
+Post.objects.get(pk=3).category.add(Category.objects.get(pk=3))
+
+set(Post.objects.all().values_list('category__name', flat=True))
