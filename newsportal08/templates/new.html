@@ -1,0 +1,37 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+<!-- Название у нас будет Product -->
+{% block title %}
+Post
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
+{% block content %}
+    <h1>Новость по категории {{ post1.category.last }}</h1>
+       <table>
+           <tr>
+               <td>№ записи</td>
+               <td>Заголовок</td>
+               <td>Дата публикации</td>
+               <td>Текст</td>
+               <td>Автор</td>
+               <td>Статья или новость</td>
+               <td>Категория</td>
+           </tr>
+            <tr>
+               <td>{{ post1.id }}</td>
+               <td>{{ post1.header|censor }}</td>
+               <td>{{ post1.time_in }}</td>
+               <td>{{ post1.article_text|censor|truncatechars:20 }}</td>
+               <td>{{ post1.author }}</td>
+               <td>{{ post1.choice_field }}</td>
+               <td>{{ post1.category.last }}</td>
+            </tr>
+       </table>
+    {% if is_not_subscriber %}
+        <button> <a href="{% url 'subscribe' post1.category.last.id %}"> Подписаться </a></button>
+    {% else %}
+        <h4>У вас уже оформлена подписка на категорию новостей {{ post1.category.last }}</h4>
+    {% endif %}
+{% endblock content %}
