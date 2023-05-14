@@ -1,0 +1,21 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+{% if canedit %}
+     <h2>Отредактируйте объявление</h2>
+{% else %}
+    <h2>Посмотрите объявлениe</h2>
+{% endif %}
+<hr>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.media }}
+    <table>{{ form.as_table}}
+    {% if canedit %}
+         <tr><td></td><td><input type="submit" value="Save"/></td></tr>
+    {% else %}
+        <tr><td></td><td><button> <a href="{% url 'post_detail' post.id %}">Выйти без сохранения</a> </button></td></tr>
+    {% endif %}
+    </table>
+</form>
+{% endblock content %}

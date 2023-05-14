@@ -1,0 +1,81 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+{% load custom_tags %}
+
+{% block title %}
+Post
+{% endblock title %}
+
+{% block content %}
+    {% include 'tiny.html' %}
+
+   <h3>Доска объявлений</h3>
+
+   {# Добавляем форму, которая объединяет набор полей, которые будут отправляться в запросе #}
+   <form action="" method="get">
+       {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}
+       <table>{{ filterset.form.as_table }}
+       {# Добавим кнопку отправки данных формы #}
+       <tr><td></td><td><input type="submit" value="Найти" /></td></tr>
+        </table>
+   </form>
+
+   <!-- Используем переданную из представления переменную time_now
+   и применяем к ней фильтр date. По назначению этот фильтр очень похож
+   на метод strftime у объекта datetime в Python — вывод времени
+   в указанном формате. -->
+   <h3>{{ time_now|date:'M d Y' }}</h3>
+   <hr>
+    <a href="{% url 'post_create' %}"> Добавить новое объявление </a>
+   {% if posts %}
+       <table>
+           <tr>
+               <td>Заголовок</td>
+               <td>Текст</td>
+               <td>Дата публикации</td>
+               <td>Категория</td>
+               <td>Автор</td>
+               <td>Действие</td>
+           </tr>
+
+           {% for p in posts %}
+                <tr>
+                   <td>{{ p.header }}</td>
+                   <td><textarea>{{ p.article_text}}</textarea></td>
+                   <td>{{ p.time_in }}</td>
+                   <td>{{ p.category }}</td>
+                   <td>{{ p.author }}</td>
+                   <td>
+                       <div><a href="{% url 'post_detail' p.id %}"> Список откликов </a></div>
+                       <div><a href="{% url 'post_update' p.id %}"> Изменить объявление </a></div>
+                   </td>
+                </tr>
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h3>Объявлений нет!</h3>
+   {% endif %}
+   {# Добавляем пагинацию на страницу #}
+   {# Информация о предыдущих страницах #}
+   {% if page_obj.has_previous %}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {# Информация о текущей странице #}
+   {{ page_obj.number }}
+
+   {# Информация о следующих страницах #}
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+{% endblock content %}

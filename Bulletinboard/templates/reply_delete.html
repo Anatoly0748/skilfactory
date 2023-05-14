@@ -1,0 +1,16 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<h1>Удаление отклика</h1>
+<hr>
+<form action="" method="post">
+    {% csrf_token %}
+    <p>Удаляем "{{ object.id }}  {{ object.post }}   {{ object.comment_text }}"?</p>
+    {% if canedit %}
+         <input type="submit" value="Delete" />
+    {% else %}
+        <p>Выходим без удаления, это объявление было создано другим пользователем</p>
+        <button> <a href="{% url 'reply_list' %}">Выйти без удаления</a> </button>
+    {% endif %}
+</form>
+{% endblock content %}

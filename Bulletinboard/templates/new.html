@@ -1,0 +1,72 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+<!-- Название у нас будет Product -->
+{% block title %}
+Post
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
+{% block content %}
+    {% include 'tiny.html' %}
+    <h2>Объявление № {{ post1.id }}</h2>
+    <a href="{% url 'post_update' post1.id %}">
+        {% if canedit %}
+            Изменить объявление
+        {% else %}
+            Открыть объявление
+        {% endif %}
+    </a>
+       <table>
+           <tr>
+               <td>№ записи</td>
+               <td>Дата публикации</td>
+               <td>Заголовок</td>
+               <td>Текст</td>
+               <td>Категория</td>
+               <td>Автор</td>
+           </tr>
+            <tr>
+               <td>{{ post1.id }}</td>
+               <td>{{ post1.time_in }}</td>
+               <td>{{ post1.header }}</td>
+               <td><textarea rows="2" cols="50">{{ post1.article_text}}</textarea></td>
+               <td>{{ post1.category }}</td>
+               <td>{{ post1.author }}</td>
+            </tr>
+       </table>
+<h2>Отклики на объявление</h2>
+{% if canedit %}
+    <p>Добавление откликов невозможно - нет смысла добавлять отклик в личное объявление</p>
+{% else %}
+    <a href="{% url 'reply_create' post1.id %}"> Добавить новый отклик </a>
+{% endif %}
+{% if replys %}
+       <table>
+           <tr>
+               <td>№ отклика</td>
+               <td>Дата отклика</td>
+               <td>Текст отклика</td>
+               <td>Автор отклика</td>
+               <td>Автор объявления</td>
+               <td>Текст объявления</td>
+           </tr>
+          {% for r in replys %}
+            <tr>
+               <td>{{ r.pk }}</td>
+               <td>{{ r.time_in }}</td>
+               <td>{{ r.comment_text}}</td>
+               <td>{{ r.user }}</td>
+               <td>{{ r.post.author}}</td>
+               <td>{{ r.post.article_text|truncatechars:50}}</td>
+               <td>
+                   <div><a href="{% url 'reply_edit' r.pk %}"> Изменить отклик </a></div>
+                   {#<div><a href="{% url 'reply_delete' r.pk %}"> Удалить отклик </a></div>#}
+               </td>
+            </tr>
+         {% endfor %}
+       </table>
+   {% else %}
+       <h2>Откликов нет!</h2>
+   {% endif %}
+{% endblock content %}
