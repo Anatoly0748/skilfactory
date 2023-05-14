@@ -1,15 +1,15 @@
+
 {% extends 'flatpages/default.html' %}
 
 {% block content %}
 {% if canedit %}
-     <h2>Отредактируйте объявление</h2>
+     <h2>Создайте новый отклик</h2>
 {% else %}
-    <h2>Посмотрите объявлениe</h2>
+    <h2>Посмотрите отклик</h2>
 {% endif %}
 <hr>
 <form action="" method="post">
     {% csrf_token %}
-    {{ form.media }}
     <table>{{ form.as_table}}
     {% if canedit %}
          <tr><td></td><td><input type="submit" value="Save"/></td></tr>

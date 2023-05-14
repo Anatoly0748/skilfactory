@@ -8,14 +8,17 @@ Post
 {% endblock title %}
 
 {% block content %}
-   <h1>Все новости</h1>
+    {% include 'tiny.html' %}
+
+   <h3>Доска объявлений</h3>
 
    {# Добавляем форму, которая объединяет набор полей, которые будут отправляться в запросе #}
    <form action="" method="get">
        {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}
-       {{ filterset.form.as_p }}
+       <table>{{ filterset.form.as_table }}
        {# Добавим кнопку отправки данных формы #}
-       <input type="submit" value="Найти" />
+       <tr><td></td><td><input type="submit" value="Найти" /></td></tr>
+        </table>
    </form>
 
    <!-- Используем переданную из представления переменную time_now
@@ -24,36 +27,37 @@ Post
    в указанном формате. -->
    <h3>{{ time_now|date:'M d Y' }}</h3>
    <hr>
+    <a href="{% url 'post_create' %}"> Добавить новое объявление </a>
    {% if posts %}
        <table>
            <tr>
-               <td>№ записи</td>
                <td>Заголовок</td>
-               <td>Дата публикации</td>
                <td>Текст</td>
-               <td>Автор</td>
-               <td>Статья или новость</td>
+               <td>Дата публикации</td>
                <td>Категория</td>
+               <td>Автор</td>
+               <td>Действие</td>
            </tr>
 
            {% for p in posts %}
                 <tr>
-                   <td>{{ p.id }}</td>
-                   <td>{{ p.header|censor }}</td>
+                   <td>{{ p.header }}</td>
+                   <td><textarea>{{ p.article_text}}</textarea></td>
                    <td>{{ p.time_in }}</td>
-                   <td>{{ p.article_text|censor|truncatechars:20 }}</td>
+                   <td>{{ p.category }}</td>
                    <td>{{ p.author }}</td>
-                   <td>{{ p.choice_field }}</td>
-                   <td>{{ p.category.last }}</td>
+                   <td>
+                       <div><a href="{% url 'post_detail' p.id %}"> Список откликов </a></div>
+                       <div><a href="{% url 'post_update' p.id %}"> Изменить объявление </a></div>
+                   </td>
                 </tr>
            {% endfor %}
 
        </table>
    {% else %}
-       <h2>Новостей нет!</h2>
+       <h3>Объявлений нет!</h3>
    {% endif %}
    {# Добавляем пагинацию на страницу #}
-
    {# Информация о предыдущих страницах #}
    {% if page_obj.has_previous %}
        <a href="?{% url_replace page=1 %}">1</a>

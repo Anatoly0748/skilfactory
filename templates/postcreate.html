@@ -2,14 +2,13 @@
 
 {% block content %}
 {% if canedit %}
-     <h2>Отредактируйте объявление</h2>
+     <h4>Создайте новое объявление и в режиме обновления добавьте медиа</h4>
 {% else %}
-    <h2>Посмотрите объявлениe</h2>
+    <h3>Посмотрите медиа в объявлении</h3>
 {% endif %}
 <hr>
 <form action="" method="post">
     {% csrf_token %}
-    {{ form.media }}
     <table>{{ form.as_table}}
     {% if canedit %}
          <tr><td></td><td><input type="submit" value="Save"/></td></tr>

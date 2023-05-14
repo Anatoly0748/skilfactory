@@ -1,0 +1,54 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+<!-- Название у нас будет Product -->
+{% block title %}
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
+{% block content %}
+  <h3>Отклики на мои объявления</h3>
+
+   {# Добавляем форму, которая объединяет набор полей, которые будут отправляться в запросе #}
+   <form action="" method="get">
+       {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}
+       <table>{{ filterset.form.as_table }}
+       {# Добавим кнопку отправки данных формы #}
+       <tr><td></td><td><input type="submit" value="Найти" /></td></tr>
+        </table>
+   </form>
+{% if replys %}
+       <table>
+           <tr>
+               <td>№ отклика</td>
+               <td>Дата отклика</td>
+               <td>Текст отклика</td>
+               <td>Автор отклика</td>
+               <td>Текст объявления</td>
+               <td>Категория</td>
+           </tr>
+           {% if request.user.is_authenticated %}
+          {% for r in replys %}
+            <tr>
+               <td>{{ r.id }}</td>
+               <td>{{ r.time_in }}</td>
+               <td>{{ r.comment_text}}</td>
+               <td>{{ r.user }}</td>
+               <td>{{ r.post.article_text|truncatechars:50}}</td>
+               <td>{{ r.post.category }}</td>
+               <td>
+                   {#<div><a href="{% url 'post_update' r.post.id %}"> Открыть объявление </a></div>#}
+                   {#<div><a href="{% url 'reply_edit' r.id %}"> Открыть отклик </a></div>#}
+                   <div><a href="{% url 'accept' r.id %}"> Принять отклик </a></div>
+                   <div><a href="{% url 'reply_delete' r.id %}"> Удалить отклик </a></div>
+               </td>
+            </tr>
+         {% endfor %}
+           {% else %}
+                <h3>Вы анонимный пользователь, вам это не доступно</h3>
+           {% endif %}
+       </table>
+   {% else %}
+       <h3>Откликов нет!</h3>
+   {% endif %}
+{% endblock content %}

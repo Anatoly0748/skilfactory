@@ -8,9 +8,14 @@
         <title>Bare - Start Bootstrap Template</title>
         {% load static %}
 
-        <!-- Core theme CSS (includes Bootstrap)-->
-
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+
+        <style>
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+        }
+        </style>
     </head>
     <body>
         <!-- Responsive navbar-->
@@ -26,18 +31,13 @@
                <div class="collapse navbar-collapse" id="navbarResponsive">
                    <ul class="navbar-nav ml-auto">
                        <li class="nav-item active">
-                           <a class="nav-link" href="#">Home
-                               <span class="sr-only">(current)</span>
-                           </a>
+                           <a  class="nav-link" href="{% url 'post_list' %}"> Доска объявлений</a>
                        </li>
                        <li class="nav-item">
-                           <a class="nav-link" href="/admin/">Admin</a>
+                           <a  class="nav-link" href="{% url 'reply_list' %}"> Отклики на мои объявления</a>
                        </li>
                        <li class="nav-item">
-                           <!a class="nav-link" href="/contacts/">Contact</a>
-                       </li>
-                       <li class="nav-item">
-                           <!a class="nav-link" href="/dabout/">Page3</a>
+                           <a class="nav-link" href="/admin/">Страница администратора</a>
                        </li>
                    </ul>
                </div>
@@ -47,9 +47,15 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    {% block content %}
-                    {{ flatpage.content }}
-                    {% endblock content %}
+                    {% if request.user.is_authenticated %}
+                        <h6>Страница пользователя {{request.user.username}}</h6>
+                        {% block content %}
+                        {{ flatpage.content }}
+                        {% endblock content %}
+                   {% else %}
+                        <h6>Страница анонимного пользователя</h6>
+                        <div></div><button> <a href="/sign/login/"> Авторизоваться </a></button</div>
+                   {% endif %}
                 </div>
             </div>
         </div>

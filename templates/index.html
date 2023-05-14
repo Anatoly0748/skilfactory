@@ -1,10 +1,15 @@
 {% extends "main.html" %}
 
 {% block content %}
-<h2>Страница авторизованного пользователя {{request.user.username}}</h2>
-<div> Здесь может содержаться персональная информация для каждого пользователя </div>
-{% if is_not_authors %}
-<button> <a href="sign/upgrade/"> Cтать автором!</a> </button>
+<h3>Страница пользователя {{request.user.username}}</h3>
+{% if is_not_activate %}
+    <button> <a href="{% url 'endreg'%}">Авторизоваться по коду</a> </button>
 {% endif %}
-<button> <a href="sign/logout/">Выйти</a> </button>
+{% if request.user.is_authenticated %}
+<div><button><a class="nav-link" href="{% url 'post_list' %}"> Доска объявлений</a></button></div>
+{% else %}
+    <h6>Страница анонимного пользователя</h6>
+    <div><button> <a href="/sign/login/"> Авторизоваться </a></button</div>
+{% endif %}
+<button> <a href="sign/logout/">Logout</a> </button>
 {% endblock %}
